@@ -1,0 +1,11 @@
+header {
+  display: flex;
+  justify-content: space-between;
+  padding: 20px 100px;
+  background-color: #121212;
+}
+
+nav {
+  display: flex;
+  gap: 60px;
+}
