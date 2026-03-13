@@ -1,19 +1,47 @@
 import { Link, NavLink } from "react-router";
-import "./Header.css";
+import { useAuth } from "../../hooks/useAuth";
+import styles from "./Header.module.css";
+
+const navLinks = [
+  { to: "/", text: "Main" },
+  { to: "/catalog", text: "Catalog" },
+  { to: "/library", text: "Library" },
+  { to: "/collections", text: "Collections" },
+];
 
 export const Header = () => {
+  const { user, logout } = useAuth();
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
+  };
+
   return (
-    <header>
+    <header className={styles.header}>
       <Link to="/">MovieTracker</Link>
 
-      <nav>
-        <NavLink to="/">Main</NavLink>
-        <NavLink to="/catalog">Catalog</NavLink>
-        <NavLink to="/library">Library</NavLink>
-        <NavLink to="/collections">Collections</NavLink>
+      <nav className={styles.nav}>
+        {navLinks.map((link) => (
+          <NavLink
+            key={link.to}
+            to={link.to}
+            className={({ isActive }) =>
+              isActive ? `${styles.link} ${styles.active}` : styles.link
+            }
+          >
+            {link.text}
+          </NavLink>
+        ))}
       </nav>
 
-      <Link to="/profile">Profile</Link>
+      <div className={styles.userActions}>
+        <Link to="/profile" >Profile</Link>
+        {user && <button onClick={handleLogout} className={styles.button}>Logout</button>}
+      </div>
     </header>
   );
 };
