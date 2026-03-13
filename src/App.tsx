@@ -1,3 +1,5 @@
+import { useEffect } from "react";
+import { auth, db } from "./services/firebase.ts";
 import { MainLayout } from "./components";
 import { Route, Routes } from "react-router";
 import {
@@ -10,6 +12,10 @@ import {
 } from "./pages/index.ts";
 
 function App() {
+  useEffect(() => {
+    console.log("Firebase подключен:", auth, db);
+  }, []);
+
   return (
     <Routes>
       <Route path="/" element={<MainLayout />}>
