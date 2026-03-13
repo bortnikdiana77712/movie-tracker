@@ -1,8 +1,8 @@
-import "./Footer.css";
+import styles from "./Footer.module.css";
 
 export const Footer = () => {
   return (
-    <footer>
+    <footer className={styles.footer}>
       <p>2026 MovieTracker</p>
     </footer>
   );
