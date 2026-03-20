@@ -1,3 +1,8 @@
 export { Header } from "./header/Header";
-export { MainLayout } from "./layout/MainLayout";
+export { MainLayout } from "../app/layout/MainLayout";
 export { Footer } from "./footer/Footer";
+export { ProtectedRoute } from "../app/ProtectedRoute";
+export { MovieCard } from "./movieCard/MovieCard";
+export { Pagination } from "./pagination/Pagination";
+export { Loading } from "./loading/Loading";
+export { Error } from "./error/Error";
