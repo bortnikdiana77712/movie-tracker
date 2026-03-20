@@ -1,6 +1,6 @@
 import { useEffect } from "react";
-import { auth, db } from "./services/firebase.ts";
-import { MainLayout } from "./components";
+import { auth, db } from "../services/firebase.ts";
+import { MainLayout, ProtectedRoute } from "../components";
 import { Route, Routes } from "react-router";
 import {
   Main,
@@ -10,10 +10,9 @@ import {
   MoviePage,
   Profile,
   Login,
-} from "./pages/index.ts";
-import { ProtectedRoute } from "./components/route/ProtectedRoute.tsx";
+} from "../pages/index.ts";
 
-function App() {
+export function App() {
   useEffect(() => {
     console.log("Firebase подключен:", auth, db);
   }, []);
@@ -54,4 +53,3 @@ function App() {
   );
 }
 
-export default App;
