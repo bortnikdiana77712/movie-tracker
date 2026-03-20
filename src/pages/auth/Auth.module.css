@@ -5,17 +5,19 @@
 }
 
 .formWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
   max-width: 600px;
   min-width: 400px;
-  padding: 30px;
+  padding: var(--spacing-xl);
   background-color: var(--bg-primary);
-  border-radius: 12px;
+  border-radius: var(--radius-md);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
 }
 
 .title {
   text-align: center;
-  margin-bottom: 30px;
   color: var(--accent);
   font-size: 28px;
 }
@@ -23,13 +25,13 @@
 .form {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: var(--spacing-lg);
 }
 
 .inputGroup {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: var(--spacing-xs);
 }
 
 .label {
@@ -38,9 +40,9 @@
 }
 
 .input {
-  padding: 12px;
-  border: 1px solid #333333;
-  border-radius: 6px;
+  padding: var(--input-padding);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
   background-color: var(--bg-secondary);
   color: var(--text-primary);
 }
@@ -50,45 +52,42 @@
   border-color: var(--accent);
 }
 
-.input::placeholder {
-  color: #666;
+.inputError {
+  border-color: var(--error);
+}
+
+.errorText {
+  color: var(--error);
+  font-size: 12px;
+  margin-top: 4px;
 }
 
 .button {
-  padding: 12px;
+  padding: var(--spacing-sm);
   background-color: var(--accent);
   border: none;
   color: var(--text-primary);
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
   font-size: 16px;
   cursor: pointer;
 }
 
-.button:hover {
-  background-color: #6655cc;
+.button:hover:not(:disabled) {
+  background-color: var(--accent-dark);
 }
 
-.error {
-  color: var(--error);
-  font-size: 14px;
+.switchText {
   text-align: center;
-  padding: 10px;
-  background-color: rgba(255, 107, 107, 0.1);
-  border-radius: 4px;
+  color: var(--text-secondary);
+  font-size: 14px;
 }
 
-.switchButton {
-  margin-top: 10px;
-  background: none;
-  border: none;
+.link {
+  margin-left: 8px;
   color: var(--accent);
-  cursor: pointer;
-  font-size: 14px;
-  text-decoration: underline;
-  width: 100%;
-  text-align: center;
+  text-decoration: none;
 }
 
-.switchButton:hover {
-  color: #6655cc;
+.link:hover {
+  text-decoration: underline;
 }

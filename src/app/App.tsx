@@ -10,6 +10,7 @@ import {
   MoviePage,
   Profile,
   Login,
+  Register,
 } from "../pages/index.ts";
 
 export function App() {
@@ -21,8 +22,12 @@ export function App() {
     <Routes>
       <Route path="/" element={<MainLayout />}>
         <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+
         <Route index element={<Main />} />
+
         <Route path="catalog" element={<Catalog />} />
+
         <Route
           path="library"
           element={
@@ -31,6 +36,7 @@ export function App() {
             </ProtectedRoute>
           }
         />
+
         <Route
           path="collections"
           element={
@@ -39,6 +45,7 @@ export function App() {
             </ProtectedRoute>
           }
         />
+
         <Route
           path="profile"
           element={
