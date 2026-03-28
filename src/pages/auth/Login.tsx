@@ -2,7 +2,8 @@ import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { useAuth } from "../../hooks";
-import { getFirebaseErrorMessage, loginRules } from "../../utils";
+import { PasswordInput } from "../../components";
+import { getFirebaseErrorMessage, validationConfig } from "../../utils";
 
 import styles from "./Auth.module.css";
 
@@ -58,7 +59,7 @@ export const Login = () => {
               className={`${styles.input} ${errors.email ? styles.inputError : ""}`}
               placeholder="your@email.com"
               {...register("email", {
-                ...loginRules.email,
+                ...validationConfig.login.email,
                 onChange: () => setFirebaseError(""),
               })}
               disabled={isSubmitting}
@@ -71,18 +72,15 @@ export const Login = () => {
 
           <div className={styles.inputGroup}>
             <label className={styles.label}>Password</label>
-
-            <input
-              type="password"
-              className={`${styles.input} ${errors.password ? styles.inputError : ""}`}
+            
+            <PasswordInput
+              register={register}
+              name="password"
               placeholder="******"
-              {...register("password", {
-                ...loginRules.password,
-                onChange: () => setFirebaseError(""),
-              })}
+              error={errors.password?.message}
               disabled={isSubmitting}
             />
-            
+
             {errors.password && (
               <span className={styles.errorText}>
                 {errors.password.message}

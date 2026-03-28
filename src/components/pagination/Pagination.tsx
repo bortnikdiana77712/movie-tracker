@@ -18,7 +18,10 @@ export const Pagination: React.FC<PaginationProps> = ({
       return Array.from({ length: totalPages }, (_, i) => i + 1);
     }
 
-    const start = Math.max( 1, Math.min(currentPage - 2, totalPages - maxVisiblePages + 1));
+    const start = Math.max(
+      1,
+      Math.min(currentPage - 2, totalPages - maxVisiblePages + 1),
+    );
     const end = Math.min(totalPages, start + maxVisiblePages - 1);
 
     const pages = [];
@@ -33,18 +36,20 @@ export const Pagination: React.FC<PaginationProps> = ({
 
   if (totalPages <= 1) return null;
 
+  const pageNumbers = getPageNumbers();
+
   return (
     <div className={styles.pagination}>
       <button
         onClick={() => onPageChange(currentPage - 1)}
         disabled={!hasPrevPage}
-        className={styles.pageButton}
+        className={`${styles.pageButton} ${!hasPrevPage ? styles.disabled : ""}`}
       >
         Prev
       </button>
 
       <div className={styles.pageNumbers}>
-        {getPageNumbers().map((pageNum) => (
+        {pageNumbers.map((pageNum) => (
           <button
             key={pageNum}
             onClick={() => onPageChange(pageNum)}
@@ -60,7 +65,7 @@ export const Pagination: React.FC<PaginationProps> = ({
       <button
         onClick={() => onPageChange(currentPage + 1)}
         disabled={!hasNextPage}
-        className={styles.pageButton}
+        className={`${styles.pageButton} ${!hasNextPage ? styles.disabled : ""}`}
       >
         Next
       </button>

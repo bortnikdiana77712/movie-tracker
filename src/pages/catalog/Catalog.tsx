@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useFilms } from "../../hooks";
 import { Error, Loading, MovieCard, Pagination } from "../../components";
@@ -8,55 +8,55 @@ import styles from "./Catalog.module.css";
 export const Catalog = () => {
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const [searchQuery, setSearchQuery] = useState(searchParams.get("q") || "");
-  const [currentPage, setCurrentPage] = useState(() => {
-    const page = parseInt(searchParams.get("page") || "1");
-    return isNaN(page) ? 1 : page;
-  });
+  const initialQuery = searchParams.get("q") || "";
+  const initialPage = parseInt(searchParams.get("page") || "1");
 
-  const [isSearching, setIsSearching] = useState(() => !!searchParams.get("q"));
+  const [inputValue, setInputValue] = useState(initialQuery);
+  const [activeQuery, setActiveQuery] = useState(initialQuery);
+  const [currentPage, setCurrentPage] = useState(
+    isNaN(initialPage) ? 1 : initialPage,
+  );
+
+  const isSearching = activeQuery !== "";
 
   const { films, loading, error, totalPages } = useFilms({
     type: isSearching ? "search" : "popular",
-    query: searchQuery,
+    query: activeQuery,
     page: currentPage,
     enabled: true,
   });
 
-  useEffect(() => {
-    const params: Record<string, string> = {};
-
-    if (isSearching && searchQuery) {
-      params.q = searchQuery;
-    }
-    if (currentPage > 1) {
-      params.page = currentPage.toString();
-    }
-
+  const updateUrl = (query: string, page: number) => {
+    const params = new URLSearchParams();
+    if (query) params.set("q", query);
+    if (page > 1) params.set("page", page.toString());
     setSearchParams(params, { replace: true });
-  }, [isSearching, searchQuery, currentPage, setSearchParams]);
+  };
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    if (searchQuery.trim()) {
-      setIsSearching(true);
+    if (inputValue.trim()) {
+      setActiveQuery(inputValue);
       setCurrentPage(1);
+      updateUrl(inputValue, 1);
     }
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchQuery(e.target.value);
+    setInputValue(e.target.value);
   };
 
   const handleClear = () => {
-    setSearchQuery("");
-    setIsSearching(false);
+    setInputValue("");
+    setActiveQuery("");
     setCurrentPage(1);
+    updateUrl("", 1);
   };
 
   const goToPage = (page: number) => {
     setCurrentPage(page);
-    window.scrollTo({ top: 0, behavior: "smooth" }); //скролл
+    updateUrl(activeQuery, page);
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   if (loading && films.length === 0) {
@@ -70,18 +70,18 @@ export const Catalog = () => {
   return (
     <>
       <h1>
-        {isSearching ? `Search Results for "${searchQuery}"` : "All Movies"}
+        {isSearching ? `Search Results for "${activeQuery}"` : "All Movies"}
       </h1>
 
       <form onSubmit={handleSearch} className={styles.searchForm}>
         <input
           type="text"
           placeholder="Search movies..."
-          value={searchQuery}
+          value={inputValue}
           onChange={handleInputChange}
           className={styles.searchInput}
         />
-        
+
         <button type="submit" className={styles.searchButton}>
           Search
         </button>
@@ -117,7 +117,7 @@ export const Catalog = () => {
 
       {isSearching && !loading && noResults && (
         <div className={styles.noResults}>
-          No movies found for "{searchQuery}"
+          No movies found for "{activeQuery}"
         </div>
       )}
     </>

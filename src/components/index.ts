@@ -4,5 +4,7 @@ export { Footer } from "./footer/Footer";
 export { ProtectedRoute } from "../app/ProtectedRoute";
 export { MovieCard } from "./movieCard/MovieCard";
 export { Pagination } from "./pagination/Pagination";
+export { Dropdown } from "./ui/dropdown/Dropdown";
+export { PasswordInput } from "./passwordInput/PasswordInput";
 export { Loading } from "./loading/Loading";
 export { Error } from "./error/Error";

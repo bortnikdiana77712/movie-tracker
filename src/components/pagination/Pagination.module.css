@@ -17,6 +17,11 @@
   color: var(--text-primary);
 }
 
+.pageButton.disabled {
+  border-color: var(--border);
+  cursor: not-allowed;
+}
+
 .pageNumbers {
   display: flex;
   gap: var(--spacing-xs);
