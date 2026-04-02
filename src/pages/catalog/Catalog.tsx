@@ -68,7 +68,7 @@ export const Catalog = () => {
   const noResults = !loading && films.length === 0;
 
   return (
-    <>
+    <div className={styles.catalog}>
       <h1>
         {isSearching ? `Search Results for "${activeQuery}"` : "All Movies"}
       </h1>
@@ -120,6 +120,6 @@ export const Catalog = () => {
           No movies found for "{activeQuery}"
         </div>
       )}
-    </>
+    </div>
   );
 };

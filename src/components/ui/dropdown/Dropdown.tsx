@@ -25,7 +25,7 @@ export const Dropdown = ({ trigger, children }: DropdownProps) => {
     <div ref={ref} className={styles.dropdown}>
       <div
         onClick={(e) => {
-          e.stopPropagation();
+          e.stopPropagation();//предотвращает всплытие
           setOpen(!open);
         }}
       >
@@ -35,7 +35,7 @@ export const Dropdown = ({ trigger, children }: DropdownProps) => {
       {open && (
         <div
           className={styles.dropdownMenu}
-          onClick={(e) => e.stopPropagation()}
+          onClick={(e) => e.stopPropagation()} 
         >
           {children}
         </div>

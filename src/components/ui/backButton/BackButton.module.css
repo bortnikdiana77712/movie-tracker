@@ -1,0 +1,20 @@
+.backButton {
+  padding: var(--button-padding);
+  color: var(--accent);
+  border: 1px solid var(--accent);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.backButton:hover:not(:disabled) {
+  background-color: var(--accent);
+  color: var(--text-primary);
+}
+
+.backButton.disabled {
+  border-color: var(--border);
+  cursor: not-allowed;
+}
