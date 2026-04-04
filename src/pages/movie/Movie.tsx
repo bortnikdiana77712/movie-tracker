@@ -1,35 +1,39 @@
 import { useParams } from "react-router";
 import { useEffect, useState } from "react";
-import { BackButton, CreateCollectionModal, Error, Loading } from "../../components";
+import { useAuth } from "../../hooks/useAuth";
+import { useCollections } from "../../context/CollectionContext";
+import {
+  BackButton,
+  CreateCollectionModal,
+  Error,
+  Loading,
+  StatusButtons,
+  CollectionList,
+  MovieMetadata,
+} from "../../components";
 import { getFilmDetails } from "../../services/kinopoiskApi";
 import type { MovieDetails } from "../../types";
-import {
-  FaCalendar,
-  FaCheck,
-  FaClock,
-  FaFolder,
-  FaHeart,
-  FaPlus,
-  FaRegHeart,
-  FaStar,
-} from "react-icons/fa";
-import { DEFAULT_COLLECTIONS, STATUS_CONFIG } from "../../config";
-import type { FilmStatus } from "../../config/status.config";
+import { FaHeart, FaRegHeart } from "react-icons/fa";
 
 import styles from "./Movie.module.css";
+import type { FilmStatus } from "../../config/status.config";
 
 export const MoviePage = () => {
   const { id } = useParams();
+  const movieId = Number(id);
+  const { user } = useAuth();
+  const {
+    collections,
+    createCollection,
+    addToCollection,
+    removeFromCollection,
+    isInCollection,
+  } = useCollections();
 
   const [movie, setMovie] = useState<MovieDetails | null>(null);
   const [isFavorite, setIsFavorite] = useState(false);
   const [selectedStatus, setSelectedStatus] = useState<FilmStatus | null>(null);
-  const [selectedCollections, setSelectedCollections] = useState<string[]>([]);
   const [showCreateModal, setShowCreateModal] = useState(false);
-  const [newCollectionName, setNewCollectionName] = useState("");
-  const [collections, setCollections] = useState<string[]>([
-    ...DEFAULT_COLLECTIONS,
-  ]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -38,7 +42,7 @@ export const MoviePage = () => {
       if (!id) return;
       setLoading(true);
       try {
-        const data = await getFilmDetails(Number(id));
+        const data = await getFilmDetails(movieId);
         setMovie(data);
       } catch {
         setError("Failed to load movie details");
@@ -47,44 +51,35 @@ export const MoviePage = () => {
       }
     };
     fetchMovie();
-  }, [id]);
+  }, [id, movieId]);
 
-  const toggleCollection = (name: string) => {
-    setSelectedCollections((prev) =>
-      prev.includes(name) ? prev.filter((c) => c !== name) : [...prev, name],
-    );
+  const toggleCollection = async (collectionId: string) => {
+    if (isInCollection(collectionId, movieId)) {
+      await removeFromCollection(collectionId, movieId);
+    } else {
+      await addToCollection(collectionId, movieId);
+    }
   };
 
-  const handleCreateCollection = () => {
-    if (
-      newCollectionName.trim() &&
-      !collections.includes(newCollectionName.trim())
-    ) {
-      setCollections([...collections, newCollectionName.trim()]);
-      setNewCollectionName("");
-      setShowCreateModal(false);
+  const handleCreateCollection = async (name: string) => {
+    if (user && name.trim()) {
+      await createCollection(name.trim());
     }
+    setShowCreateModal(false);
   };
 
   const rating = movie?.ratingKinopoisk?.toFixed(1);
 
-  const statusButton = Object.entries(STATUS_CONFIG).map(([value, config]) => ({
-    value: value as FilmStatus,
-    label: config.label,
-    icon: config.icon,
-  }));
+  if (loading) return <Loading />;
 
-  if (loading) {
-    return <Loading />;
-  }
-
-  if (error || !movie)
+  if (error || !movie) {
     return (
-      <>
+      <div className={styles.errorContainer}>
         <Error message={error || "Movie not found"} />
         <BackButton buttonText="Back to catalog" />
-      </>
+      </div>
     );
+  }
 
   return (
     <div className={styles.moviePage}>
@@ -121,26 +116,11 @@ export const MoviePage = () => {
         <div className={styles.info}>
           <h1 className={styles.title}>{movie.nameRu}</h1>
 
-          <div className={styles.metadata}>
-            {movie.year && (
-              <span className={styles.metaItem}>
-                <FaCalendar /> {movie.year}
-              </span>
-            )}
-
-            {movie.filmLength && (
-              <span className={styles.metaItem}>
-                <FaClock /> {Math.floor(movie.filmLength / 60)}h{" "}
-                {movie.filmLength % 60}min
-              </span>
-            )}
-
-            {movie.ratingKinopoisk && (
-              <span className={styles.metaItem}>
-                <FaStar className={styles.starIcon} /> {rating} / 10
-              </span>
-            )}
-          </div>
+          <MovieMetadata
+            year={movie.year}
+            filmLength={movie.filmLength}
+            rating={rating}
+          />
 
           <div className={styles.tags}>
             {movie.genres?.map((g, i) => (
@@ -161,59 +141,30 @@ export const MoviePage = () => {
           <div className={styles.statusSection}>
             <h3 className={styles.sectionTitle}>Status</h3>
 
-            <div className={styles.statusButtons}>
-              {statusButton.map((btn) => (
-                <button
-                  key={btn.value}
-                  data-status={btn.value}
-                  className={`${styles.statusButton} ${selectedStatus === btn.value ? styles.active : ""}`}
-                  onClick={() =>
-                    setSelectedStatus(
-                      selectedStatus === btn.value ? null : btn.value,
-                    )
-                  }
-                >
-                  {btn.icon}
-                  <span>{btn.label}</span>
-                </button>
-              ))}
-            </div>
+            <StatusButtons
+              selectedStatus={selectedStatus}
+              onStatusChange={setSelectedStatus}
+            />
           </div>
 
           <div className={styles.collectionsSection}>
             <h3 className={styles.sectionTitle}>Collections</h3>
-
-            <div className={styles.collectionsList}>
-              {collections.map((col) => (
-                <button
-                  key={col}
-                  className={`${styles.collectionBtn} ${selectedCollections.includes(col) ? styles.active : ""}`}
-                  onClick={() => toggleCollection(col)}
-                >
-                  <FaFolder className={styles.collectionIcon} />
-                  <span>{col}</span>
-                  {selectedCollections.includes(col) && (
-                    <FaCheck className={styles.checkIcon} />
-                  )}
-                </button>
-              ))}
-
-              <button
-                className={styles.createCollectionBtn}
-                onClick={() => setShowCreateModal(true)}
-              >
-                <FaPlus />
-                <span>Create new</span>
-              </button>
-            </div>
-
-            <CreateCollectionModal
-              isOpen={showCreateModal}
-              onClose={() => setShowCreateModal(false)}
-              onCreate={handleCreateCollection}
-              existingCollections={collections}
+            
+            <CollectionList
+              collections={collections}
+              movieId={movieId}
+              isInCollection={isInCollection}
+              onToggleCollection={toggleCollection}
+              onCreateNew={() => setShowCreateModal(true)}
             />
           </div>
+
+          <CreateCollectionModal
+            isOpen={showCreateModal}
+            onClose={() => setShowCreateModal(false)}
+            onCreate={handleCreateCollection}
+            existingCollections={collections.map((c) => c.name)}
+          />
         </div>
       </div>
     </div>

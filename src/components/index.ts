@@ -9,5 +9,8 @@ export { PasswordInput } from "./ui/passwordInput/PasswordInput";
 export { BackButton } from "./ui/backButton/BackButton";
 export { CreateCollectionModal } from "./ui/modal/CreateCollectionModal";
 export { Modal } from "./ui/modal/Modal";
+export { CollectionList } from "./collectionList/CollectionList";
+export { MovieMetadata } from "./movieMetadata/MovieMetadata";
+export { StatusButtons } from "./statusButtons/StatusButtons";
 export { Loading } from "./loading/Loading";
 export { Error } from "./error/Error";

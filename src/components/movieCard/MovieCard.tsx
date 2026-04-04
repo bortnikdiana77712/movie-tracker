@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { DEFAULT_COLLECTIONS } from "../../config";
+import { useAuth } from "../../hooks";
+import { useCollections } from "../../context/CollectionContext";
 import {
   STATUS_CONFIG,
   STATUS_OPTIONS,
@@ -17,6 +18,7 @@ import {
   FaPlus,
 } from "react-icons/fa";
 import type { Film } from "../../types";
+
 import styles from "./MovieCard.module.css";
 
 interface MovieCardProps {
@@ -24,28 +26,36 @@ interface MovieCardProps {
 }
 
 export const MovieCard = ({ film }: MovieCardProps) => {
-  const [isFavorite, setIsFavorite] = useState(false);
+  const { user } = useAuth();
+  const {
+    collections,
+    createCollection,
+    addToCollection,
+    removeFromCollection,
+    isInCollection,
+  } = useCollections();
+
+  const [isFavorite, toggleFavorite] = useState(false);
   const [status, setStatus] = useState<FilmStatus | null>(null);
-  const [selectedCollections, setSelectedCollections] = useState<string[]>([]);
   const [isHovered, setIsHovered] = useState(false);
-
   const [showCreateModal, setShowCreateModal] = useState(false);
-  const [collections, setCollections] = useState<string[]>([
-    ...DEFAULT_COLLECTIONS,
-  ]);
 
-  const toggleCollection = (name: string) => {
-    setSelectedCollections((prev) =>
-      prev.includes(name) ? prev.filter((c) => c !== name) : [...prev, name],
-    );
+  const toggleCollection = async (collectionId: string) => {
+    if (isInCollection(collectionId, film.id)) {
+      await removeFromCollection(collectionId, film.id);
+    } else {
+      await addToCollection(collectionId, film.id);
+    }
   };
 
-  const handleCreateCollection = (name: string) => {
-    setCollections([...collections, name]);
+  const handleCreateCollection = async (name: string) => {
+    if (user && name.trim()) {
+      await createCollection(name.trim());
+    }
+    setShowCreateModal(false);
   };
 
   const rating = film.rating ? Number(film.rating).toFixed(1) : null;
-
   const statusConfig = status ? STATUS_CONFIG[status] : null;
 
   return (
@@ -75,8 +85,8 @@ export const MovieCard = ({ film }: MovieCardProps) => {
           className={`${styles.actions} ${isHovered ? styles.actionsVisible : ""}`}
         >
           <button
-            onClick={() => setIsFavorite(!isFavorite)}
-            className={styles.actionBtn}
+            className={`${styles.actionBtn} ${isFavorite ? styles.active : ""}`}
+            onClick={() => toggleFavorite(!isFavorite)}
           >
             {isFavorite ? <FaHeart /> : <FaRegHeart />}
           </button>
@@ -111,11 +121,11 @@ export const MovieCard = ({ film }: MovieCardProps) => {
             <div className={styles.dropdownHeader}>Collections</div>
             {collections.map((col) => (
               <button
-                key={col}
-                className={`${styles.dropdownItem} ${selectedCollections.includes(col) ? styles.active : ""}`}
-                onClick={() => toggleCollection(col)}
+                key={col.id}
+                className={`${styles.dropdownItem} ${isInCollection(col.id, film.id) ? styles.active : ""}`}
+                onClick={() => toggleCollection(col.id)}
               >
-                {selectedCollections.includes(col) && <FaCheck />} {col}
+                {isInCollection(col.id, film.id) && <FaCheck />} {col.name}
               </button>
             ))}
 
@@ -146,12 +156,12 @@ export const MovieCard = ({ film }: MovieCardProps) => {
           </div>
         </Link>
       </div>
-      
+
       <CreateCollectionModal
         isOpen={showCreateModal}
         onClose={() => setShowCreateModal(false)}
         onCreate={handleCreateCollection}
-        existingCollections={collections}
+        existingCollections={collections.map((c) => c.name)}
       />
     </>
   );
