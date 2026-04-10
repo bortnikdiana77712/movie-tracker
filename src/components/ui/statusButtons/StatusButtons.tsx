@@ -1,5 +1,5 @@
-import { STATUS_CONFIG } from "../../config";
-import type { FilmStatus } from "../../config/status.config";
+import { STATUS_CONFIG } from "../../../config";
+import type { FilmStatus } from "../../../config/status.config";
 
 import styles from "./StatusButtons.module.css";
 

@@ -80,3 +80,16 @@ export const formatSearchFilm = (film: SearchFilm): Film => ({
   posterUrl: film.posterUrl,
   rating: film.ratingKinopoisk,
 });
+
+export interface SimilarFilm {
+  filmId: number;
+  nameRu: string;
+  nameEn: string | null;
+  posterUrl: string;
+  relationType: string;
+}
+
+export interface SimilarFilmsResponse {
+  total: number;
+  items: SimilarFilm[];
+}

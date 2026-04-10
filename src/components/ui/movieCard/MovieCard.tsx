@@ -1,13 +1,13 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { useAuth } from "../../hooks";
-import { useCollections } from "../../context/CollectionContext";
+import { useAuth } from "../../../hooks";
+import { useCollections } from "../../../context/CollectionContext";
 import {
   STATUS_CONFIG,
   STATUS_OPTIONS,
   type FilmStatus,
-} from "../../config/status.config";
-import { Dropdown, CreateCollectionModal } from "../../components";
+} from "../../../config/status.config";
+import { Dropdown, CreateCollectionModal } from "../..";
 import {
   FaHeart,
   FaRegHeart,
@@ -17,7 +17,7 @@ import {
   FaCheck,
   FaPlus,
 } from "react-icons/fa";
-import type { Film } from "../../types";
+import type { Film } from "../../../types";
 
 import styles from "./MovieCard.module.css";
 

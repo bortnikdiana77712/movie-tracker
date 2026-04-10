@@ -59,10 +59,6 @@ export const Catalog = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  if (loading && films.length === 0) {
-    return <Loading />;
-  }
-
   if (error) return <Error message={error} />;
 
   const noResults = !loading && films.length === 0;
@@ -100,6 +96,8 @@ export const Catalog = () => {
       {!isSearching && !loading && noResults && (
         <div className={styles.noResults}>No movies available</div>
       )}
+
+      {loading && <Loading />}
 
       <div className={styles.grid}>
         {films.map((film) => (

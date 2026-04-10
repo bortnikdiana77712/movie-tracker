@@ -1,5 +1,5 @@
 import axios from "axios";
-import type { PopularResponse, SearchResponse } from "../types/movie.types";
+import type { PopularResponse, SearchResponse, SimilarFilmsResponse } from "../types/movie.types";
 
 const API_KEY = import.meta.env.VITE_KINOPOISK_API_KEY;
 const BASE_URL = "https://kinopoiskapiunofficial.tech/api";
@@ -33,5 +33,10 @@ export const getPopularFilms = async (
   const response = await kinopoiskApi.get("/v2.2/films/top", {
     params: { type: "TOP_100_POPULAR_FILMS", page },
   });
+  return response.data;
+};
+
+export const getSimilarFilms = async (id: number): Promise<SimilarFilmsResponse> => {
+  const response = await kinopoiskApi.get(`/v2.2/films/${id}/similars`);
   return response.data;
 };

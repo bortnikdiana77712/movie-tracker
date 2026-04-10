@@ -1,6 +1,6 @@
 import { FaFolder, FaCheck, FaPlus } from "react-icons/fa";
 
-import type { UserCollection } from "../../services/collection.service";
+import type { UserCollection } from "../../../services/collection.service";
 
 import styles from "./CollectionList.module.css";
 

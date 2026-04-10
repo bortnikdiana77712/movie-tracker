@@ -7,6 +7,8 @@ export type {
   MovieGenre,
   MovieCountry,
   MovieDetails,
+  SimilarFilmsResponse,
+  SimilarFilm,
 } from "./movie.types";
 
 export { formatPopularFilm, formatSearchFilm } from "./movie.types";
