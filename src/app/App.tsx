@@ -12,6 +12,7 @@ import {
   Login,
   Register,
 } from "../pages/index.ts";
+import { NotFound } from "../pages/notFound/NotFound.tsx";
 
 export function App() {
   useEffect(() => {
@@ -55,6 +56,8 @@ export function App() {
           }
         />
         <Route path="movie/:id" element={<MoviePage />} />
+
+        <Route path="*" element={<NotFound />} />
       </Route>
     </Routes>
   );

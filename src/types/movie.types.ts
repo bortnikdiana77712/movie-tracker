@@ -25,6 +25,44 @@ export interface Film {
   rating?: number | string | null;
 }
 
+export interface PopularResponse {
+  pagesCount: number;
+  films: PopularFilm[];
+  total?: number;
+}
+
+export interface SearchResponse {
+  total: number;
+  totalPages: number;
+  items: SearchFilm[];
+}
+
+export interface MovieGenre {
+  genre: string;
+}
+
+export interface MovieCountry {
+  country: string;
+}
+
+export interface MovieDetails {
+  kinopoiskId: number;
+  nameRu: string;
+  nameEn?: string;
+  description?: string;
+  year?: string;
+  ratingKinopoisk?: number;
+  posterUrl?: string;
+  posterUrlPreview?: string;
+  genres?: MovieGenre[];
+  countries?: MovieCountry[];
+  filmLength?: number;
+  slogan?: string;
+  nameOriginal?: string;
+  ratingImdb?: number;
+  webUrl?: string;
+}
+
 export const formatPopularFilm = (film: PopularFilm): Film => ({
   id: film.filmId,
   nameRu: film.nameRu,
@@ -43,14 +81,15 @@ export const formatSearchFilm = (film: SearchFilm): Film => ({
   rating: film.ratingKinopoisk,
 });
 
-export interface PopularResponse {
-  pagesCount: number;
-  films: PopularFilm[];
-  total?: number;
+export interface SimilarFilm {
+  filmId: number;
+  nameRu: string;
+  nameEn: string | null;
+  posterUrl: string;
+  relationType: string;
 }
 
-export interface SearchResponse {
+export interface SimilarFilmsResponse {
   total: number;
-  totalPages: number;
-  items: SearchFilm[];
+  items: SimilarFilm[];
 }

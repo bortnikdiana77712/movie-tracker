@@ -1,0 +1,55 @@
+.collectionsList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.collectionBtn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  background: var(--bg-third);
+  border: 1px solid var(--border);
+  border-radius: 30px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.collectionBtn:hover {
+  transform: translateY(-2px);
+  background: var(--bg-hover);
+  border-color: var(--accent);
+}
+
+.collectionBtn.active {
+  background: rgba(123, 104, 238, 0.2);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.collectionIcon {
+  font-size: 12px;
+}
+
+.checkIcon {
+  font-size: 11px;
+  margin-left: 4px;
+}
+
+.createCollectionBtn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: var(--accent);
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.createCollectionBtn:hover {
+  background: var(--accent-dark);
+  transform: translateY(-2px);
+}

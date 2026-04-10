@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import { useAuth } from "../../hooks/useAuth";
-import { registerRules } from "../../utils";
-import { getFirebaseErrorMessage } from "../../utils";
+import { useAuth } from "../../hooks";
+import { validationConfig, getFirebaseErrorMessage } from "../../utils";
+import { PasswordInput } from "../../components";
 
 import styles from "./Auth.module.css";
 
@@ -40,7 +40,7 @@ export const Register = () => {
 
   const onSubmit = async (data: RegisterFormValues) => {
     setFirebaseError("");
-    
+
     try {
       await registerUser(data.email, data.password);
       navigate("/");
@@ -64,7 +64,7 @@ export const Register = () => {
               className={`${styles.input} ${errors.email ? styles.inputError : ""}`}
               placeholder="your@email.com"
               {...register("email", {
-                ...registerRules.email,
+                ...validationConfig.register.email,
                 onChange: () => setFirebaseError(""),
               })}
               disabled={isSubmitting}
@@ -78,47 +78,40 @@ export const Register = () => {
           <div className={styles.inputGroup}>
             <label className={styles.label}>Password</label>
 
-            <input
-              type="password"
-              className={`${styles.input} ${errors.password ? styles.inputError : ""}`}
+            <PasswordInput<RegisterFormValues>
+              register={register}
+              name="password"
               placeholder="******"
-              {...register("password", {
-                ...registerRules.password,
-                onChange: () => setFirebaseError(""),
-              })}
+              error={errors.password?.message}
               disabled={isSubmitting}
             />
-
-            {errors.password && (
-              <span className={styles.errorText}>{errors.password.message}</span>
-            )}
           </div>
 
           <div className={styles.inputGroup}>
             <label className={styles.label}>Confirm Password</label>
 
-            <input
-              type="password"
-              className={`${styles.input} ${errors.confirmPassword ? styles.inputError : ""}`}
+            <PasswordInput<RegisterFormValues>
+              register={register}
+              name="confirmPassword"
               placeholder="******"
-              {...register("confirmPassword", {
-                required: "Please confirm your password",
-                validate: (value) => value === password || "Passwords do not match",
-                onChange: () => setFirebaseError(""),
-              })}
+              error={errors.confirmPassword?.message}
               disabled={isSubmitting}
+              rules={{
+                required: "Please confirm your password",
+                validate: (value: string) => {
+                  return value === password || "Passwords do not match";
+                },
+              }}
             />
-
-            {errors.confirmPassword && (
-              <span className={styles.errorText}>{errors.confirmPassword.message}</span>
-            )}
           </div>
 
-          {firebaseError && (
-            <div className={styles.error}>{firebaseError}</div>
-          )}
+          {firebaseError && <div className={styles.error}>{firebaseError}</div>}
 
-          <button type="submit" className={styles.button} disabled={isSubmitting}>
+          <button
+            type="submit"
+            className={styles.button}
+            disabled={isSubmitting}
+          >
             {isSubmitting ? "Loading..." : "Sign Up"}
           </button>
         </form>

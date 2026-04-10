@@ -1,0 +1,19 @@
+.dropdown {
+  position: relative;
+}
+
+.dropdownMenu {
+  position: absolute;
+  top: 0;
+  right: 36px;
+  background: var(--bg-third);
+  border-radius: var(--radius-md);
+  min-width: 166px;
+  padding: var(--spacing-xs);
+  z-index: 5;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}

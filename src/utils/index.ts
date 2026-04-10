@@ -1,2 +1,2 @@
-export { loginRules, registerRules } from "./validation";
+export { validationConfig } from "./validationConfigs";
 export { getFirebaseErrorMessage } from "./firebaseErrors";
