@@ -11,7 +11,7 @@ export type {
   SimilarFilm,
 } from "./movie.types";
 
-export { formatPopularFilm, formatSearchFilm } from "./movie.types";
+export { formatPopularFilm, formatSearchFilm, convertToFilm } from "./movie.types";
 
 export type { MovieStatus, UserMovieData } from "./userMovie.types";
 

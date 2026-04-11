@@ -1,6 +1,6 @@
 .loading {
   text-align: center;
-  margin: var(--spacing-xl);
+  padding: var(--spacing-xl);
   font-size: 18px;
   color: var(--text-secondary);
 }

@@ -93,3 +93,12 @@ export interface SimilarFilmsResponse {
   total: number;
   items: SimilarFilm[];
 }
+
+export const convertToFilm = (details: MovieDetails): Film => ({
+  id: details.kinopoiskId,
+  nameRu: details.nameRu,
+  nameEn: details.nameEn,
+  year: details.year || "",
+  posterUrl: details.posterUrl,
+  rating: details.ratingKinopoisk,
+});
