@@ -107,5 +107,6 @@ export const removeMovieFromCollection = async (
 };
 
 export const deleteCollection = async (collectionId: string): Promise<void> => {
-  await deleteDoc(doc(db, COLLECTIONS_COLLECTION, collectionId));
+  const ref = doc(db, COLLECTIONS_COLLECTION, collectionId);
+  await deleteDoc(ref);
 };
