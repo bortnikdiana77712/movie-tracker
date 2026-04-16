@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../../hooks";
+import { useLibrary } from "../../../context/LibraryContext";
 import { useCollections } from "../../../context/CollectionContext";
 import {
   STATUS_CONFIG,
@@ -35,8 +36,11 @@ export const MovieCard = ({ film }: MovieCardProps) => {
     isInCollection,
   } = useCollections();
 
-  const [isFavorite, toggleFavorite] = useState(false);
-  const [status, setStatus] = useState<FilmStatus | null>(null);
+  const { setStatus, getStatus } = useLibrary();
+  const [isFavorite, setIsFavorite] = useState(false);
+  const [status, setStatusState] = useState<FilmStatus | null>(() =>
+    getStatus(film.id),
+  );
   const [isHovered, setIsHovered] = useState(false);
   const [showCreateModal, setShowCreateModal] = useState(false);
 
@@ -46,6 +50,11 @@ export const MovieCard = ({ film }: MovieCardProps) => {
     } else {
       await addToCollection(collectionId, film.id);
     }
+  };
+
+  const handleStatusChange = (newStatus: FilmStatus | null) => {
+    setStatusState(newStatus);
+    setStatus(film.id, newStatus);
   };
 
   const handleCreateCollection = async (name: string) => {
@@ -86,7 +95,7 @@ export const MovieCard = ({ film }: MovieCardProps) => {
         >
           <button
             className={`${styles.actionBtn} ${isFavorite ? styles.active : ""}`}
-            onClick={() => toggleFavorite(!isFavorite)}
+            onClick={() => setIsFavorite(!isFavorite)}
           >
             {isFavorite ? <FaHeart /> : <FaRegHeart />}
           </button>
@@ -103,7 +112,9 @@ export const MovieCard = ({ film }: MovieCardProps) => {
                 key={option.value}
                 className={`${styles.dropdownItem} ${status === option.value ? styles.active : ""}`}
                 onClick={() =>
-                  setStatus(status === option.value ? null : option.value)
+                  handleStatusChange(
+                    status === option.value ? null : option.value,
+                  )
                 }
               >
                 {option.icon}
@@ -143,7 +154,7 @@ export const MovieCard = ({ film }: MovieCardProps) => {
         <Link to={`/movie/${film.id}`}>
           <div className={styles.info}>
             <h3>{film.nameRu || "Untitled"}</h3>
-
+          
             <span className={styles.year}>{film.year || ""}</span>
 
             {statusConfig && (
