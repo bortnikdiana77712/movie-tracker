@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import type { Swiper as SwiperType } from "swiper";
 import { Loading, MovieCard } from "../..";
@@ -19,6 +19,20 @@ export const Slider = ({ title, films, loading }: SliderProps) => {
   const swiperRef = useRef<SwiperType | null>(null);
   const [isBeginning, setIsBeginning] = useState(true);
   const [isEnd, setIsEnd] = useState(false);
+  const [showArrows, setShowArrows] = useState(false);
+
+  useEffect(() => {
+    if (swiperRef.current && films.length > 0) {
+      const slidesPerView = swiperRef.current.params.slidesPerView;
+      const totalSlides = films.length;
+
+      if (typeof slidesPerView === "number") {
+        setShowArrows(totalSlides > slidesPerView);
+      } else {
+        setShowArrows(totalSlides > 3);
+      }
+    }
+  }, [films]);
 
   if (loading) return <Loading />;
 
@@ -39,13 +53,15 @@ export const Slider = ({ title, films, loading }: SliderProps) => {
       <h2 className={styles.title}>{title}</h2>
 
       <div className={styles.sliderWrapper}>
-        <button
-          onClick={handlePrev}
-          disabled={isBeginning}
-          className={styles.prevBtn}
-        >
-          <FaChevronLeft />
-        </button>
+        {showArrows && (
+          <button
+            onClick={handlePrev}
+            disabled={isBeginning}
+            className={styles.prevBtn}
+          >
+            <FaChevronLeft />
+          </button>
+        )}
 
         <Swiper
           modules={[]}
@@ -55,6 +71,11 @@ export const Slider = ({ title, films, loading }: SliderProps) => {
             swiperRef.current = swiper;
             setIsBeginning(swiper.isBeginning);
             setIsEnd(swiper.isEnd);
+
+            const slidesPerView = swiper.params.slidesPerView;
+            if (typeof slidesPerView === "number") {
+              setShowArrows(films.length > slidesPerView);
+            }
           }}
           onSlideChange={(swiper) => {
             setIsBeginning(swiper.isBeginning);
@@ -74,13 +95,15 @@ export const Slider = ({ title, films, loading }: SliderProps) => {
           ))}
         </Swiper>
 
-        <button
-          onClick={handleNext}
-          disabled={isEnd}
-          className={styles.nextBtn}
-        >
-          <FaChevronRight />
-        </button>
+        {showArrows && (
+          <button
+            onClick={handleNext}
+            disabled={isEnd}
+            className={styles.nextBtn}
+          >
+            <FaChevronRight />
+          </button>
+        )}
       </div>
     </div>
   );
