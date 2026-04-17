@@ -8,25 +8,15 @@ export const useCollectionMovies = (collections: UserCollection[]) => {
     new Map(),
   );
   const [loading, setLoading] = useState(true);
-  const loadedRef = useRef<Set<string>>(new Set());
   const cacheRef = useRef<Map<number, Film>>(new Map());
 
   useEffect(() => {
-    const loadNewCollections = async () => {
-      const newCollections = collections.filter(
-        (c) => !loadedRef.current.has(c.id),
-      );
-
-      if (newCollections.length === 0) {
-        setLoading(false);
-        return;
-      }
-
+    const loadCollections = async () => {
       setLoading(true);
+      const newMap = new Map<string, Film[]>();
 
-      for (const collection of newCollections) {
+      for (const collection of collections) {
         const movies: Film[] = [];
-        
         for (const movieId of collection.movies) {
           if (cacheRef.current.has(movieId)) {
             movies.push(cacheRef.current.get(movieId)!);
@@ -41,17 +31,17 @@ export const useCollectionMovies = (collections: UserCollection[]) => {
             }
           }
         }
-        loadedRef.current.add(collection.id);
-        setCollectionMovies((prev) => new Map(prev).set(collection.id, movies));
+        newMap.set(collection.id, movies);
       }
+
+      setCollectionMovies(newMap);
       setLoading(false);
     };
 
-    loadNewCollections();
+    loadCollections();
   }, [collections]);
 
   const removeCollection = (collectionId: string) => {
-    loadedRef.current.delete(collectionId);
     setCollectionMovies((prev) => {
       const newMap = new Map(prev);
       newMap.delete(collectionId);
