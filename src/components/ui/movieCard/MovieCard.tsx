@@ -2,13 +2,13 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../../hooks";
 import { useLibrary } from "../../../context/LibraryContext";
+import { useFavorites } from "../../../context/FavoritesContext";
 import { useCollections } from "../../../context/CollectionContext";
 import {
   STATUS_CONFIG,
   STATUS_OPTIONS,
   type FilmStatus,
 } from "../../../config/status.config";
-import { Dropdown, CreateCollectionModal } from "../..";
 import {
   FaHeart,
   FaRegHeart,
@@ -21,6 +21,8 @@ import {
 import type { Film } from "../../../types";
 
 import styles from "./MovieCard.module.css";
+import { Dropdown } from "../dropdown/Dropdown";
+import { CreateCollectionModal } from "../modal/CreateCollectionModal";
 
 interface MovieCardProps {
   film: Film;
@@ -28,28 +30,28 @@ interface MovieCardProps {
 
 export const MovieCard = ({ film }: MovieCardProps) => {
   const { user } = useAuth();
-  const {
-    collections,
-    createCollection,
-    addToCollection,
-    removeFromCollection,
-    isInCollection,
-  } = useCollections();
-
+  const { collections, createCollection, addToCollection, removeFromCollection } = useCollections();
   const { setStatus, getStatus } = useLibrary();
-  const [isFavorite, setIsFavorite] = useState(false);
-  const [status, setStatusState] = useState<FilmStatus | null>(() =>
-    getStatus(film.id),
-  );
+  const { toggleFavorite, isFavorite } = useFavorites();
+  const isFav = isFavorite(film.id);
+  
+  const [status, setStatusState] = useState<FilmStatus | null>(() => getStatus(film.id));
   const [isHovered, setIsHovered] = useState(false);
   const [showCreateModal, setShowCreateModal] = useState(false);
 
   const toggleCollection = async (collectionId: string) => {
-    if (isInCollection(collectionId, film.id)) {
+    const isSelected = collections.some((col) => col.movies.includes(film.id));
+    if (isSelected) {
       await removeFromCollection(collectionId, film.id);
     } else {
       await addToCollection(collectionId, film.id);
     }
+  };
+
+  const handleToggleFavorite = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    await toggleFavorite(film.id);
   };
 
   const handleStatusChange = (newStatus: FilmStatus | null) => {
@@ -76,11 +78,7 @@ export const MovieCard = ({ film }: MovieCardProps) => {
       >
         <Link to={`/movie/${film.id}`}>
           <div className={styles.posterWrapper}>
-            <img
-              src={film.posterUrl}
-              alt={film.nameRu}
-              className={styles.poster}
-            />
+            <img src={film.posterUrl} alt={film.nameRu} className={styles.poster} />
 
             {rating && (
               <div className={styles.ratingBadge}>
@@ -90,62 +88,44 @@ export const MovieCard = ({ film }: MovieCardProps) => {
           </div>
         </Link>
 
-        <div
-          className={`${styles.actions} ${isHovered ? styles.actionsVisible : ""}`}
-        >
+        <div className={`${styles.actions} ${isHovered ? styles.actionsVisible : ""}`}>
           <button
-            className={`${styles.actionBtn} ${isFavorite ? styles.active : ""}`}
-            onClick={() => setIsFavorite(!isFavorite)}
+            className={`${styles.actionBtn} ${isFav ? styles.active : ""}`}
+            onClick={handleToggleFavorite}
           >
-            {isFavorite ? <FaHeart /> : <FaRegHeart />}
+            {isFav ? <FaHeart /> : <FaRegHeart />}
           </button>
 
-          {/*статус */}
-          <Dropdown
-            trigger={
-              <button className={styles.actionBtn}>{<FaRegBookmark />}</button>
-            }
-          >
+          <Dropdown trigger={<button className={styles.actionBtn}>{<FaRegBookmark />}</button>}>
             <div className={styles.dropdownHeader}>Status</div>
+            
             {STATUS_OPTIONS.map((option) => (
               <button
                 key={option.value}
                 className={`${styles.dropdownItem} ${status === option.value ? styles.active : ""}`}
-                onClick={() =>
-                  handleStatusChange(
-                    status === option.value ? null : option.value,
-                  )
-                }
+                onClick={() => handleStatusChange(status === option.value ? null : option.value)}
               >
-                {option.icon}
-                {option.label}
+                {option.icon} {option.label}
               </button>
             ))}
           </Dropdown>
 
-          {/*коллекции */}
-          <Dropdown
-            trigger={
-              <button className={styles.actionBtn}>{<FaFolder />}</button>
-            }
-          >
+          <Dropdown trigger={<button className={styles.actionBtn}>{<FaFolder />}</button>}>
             <div className={styles.dropdownHeader}>Collections</div>
+
             {collections.map((col) => (
               <button
                 key={col.id}
-                className={`${styles.dropdownItem} ${isInCollection(col.id, film.id) ? styles.active : ""}`}
+                className={`${styles.dropdownItem} ${col.movies.includes(film.id) ? styles.active : ""}`}
                 onClick={() => toggleCollection(col.id)}
               >
-                {isInCollection(col.id, film.id) && <FaCheck />} {col.name}
+                {col.movies.includes(film.id) && <FaCheck />} {col.name}
               </button>
             ))}
 
             <div className={styles.divider} />
 
-            <button
-              className={styles.dropdownItem}
-              onClick={() => setShowCreateModal(true)}
-            >
+            <button className={styles.dropdownItem} onClick={() => setShowCreateModal(true)}>
               <FaPlus /> Create new
             </button>
           </Dropdown>
@@ -154,13 +134,9 @@ export const MovieCard = ({ film }: MovieCardProps) => {
         <Link to={`/movie/${film.id}`}>
           <div className={styles.info}>
             <h3>{film.nameRu || "Untitled"}</h3>
-          
             <span className={styles.year}>{film.year || ""}</span>
-
             {statusConfig && (
-              <div
-                className={`${styles.statusBadge} ${styles[`status_${status}`]}`}
-              >
+              <div className={`${styles.statusBadge} ${styles[`status_${status}`]}`}>
                 {statusConfig.icon} {statusConfig.label}
               </div>
             )}

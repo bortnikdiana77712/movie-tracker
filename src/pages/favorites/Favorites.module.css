@@ -1,0 +1,48 @@
+.favorites {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 40px;
+  padding: 40px 100px;
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 20px;
+}
+
+.count {
+  color: var(--text-secondary);
+  width: 100px;
+}
+
+.empty {
+  width: 100%;
+  text-align: center;
+  padding: 80px 20px;
+  background: var(--bg-secondary);
+  border-radius: 16px;
+}
+
+.empty p {
+  color: var(--text-secondary);
+  margin-bottom: 20px;
+}
+
+.catalogLink {
+  display: inline-block;
+  padding: 10px 20px;
+  background: var(--accent);
+  border-radius: 8px;
+  color: white;
+  text-decoration: none;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: var(--spacing-lg);
+  width: 100%;
+}

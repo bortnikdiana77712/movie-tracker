@@ -7,12 +7,14 @@ import {
   Catalog,
   Library,
   Collections,
+  NotFound,
+  Favorites,
   MoviePage,
   Profile,
   Login,
   Register,
 } from "../pages/index.ts";
-import { NotFound } from "../pages/notFound/NotFound.tsx";
+import {  } from "../pages/notFound/NotFound.tsx";
 
 export function App() {
   useEffect(() => {
@@ -43,6 +45,15 @@ export function App() {
           element={
             <ProtectedRoute>
               <Collections />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="favorites"
+          element={
+            <ProtectedRoute>
+              <Favorites />
             </ProtectedRoute>
           }
         />
