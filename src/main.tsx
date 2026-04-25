@@ -5,6 +5,7 @@ import { BrowserRouter } from "react-router";
 import { AuthProvider } from "./context/AuthContext.tsx";
 import { CollectionProvider } from "./context/CollectionContext.tsx";
 import { LibraryProvider } from "./context/LibraryContext.tsx";
+import { FavoritesProvider } from "./context/FavoritesContext";
 
 import "./index.css";
 
@@ -13,9 +14,11 @@ createRoot(document.getElementById("root")!).render(
     <AuthProvider>
       <CollectionProvider>
         <LibraryProvider>
-          <StrictMode>
-            <App />
-          </StrictMode>
+          <FavoritesProvider>
+            <StrictMode>
+              <App />
+            </StrictMode>
+          </FavoritesProvider>
         </LibraryProvider>
       </CollectionProvider>
     </AuthProvider>
