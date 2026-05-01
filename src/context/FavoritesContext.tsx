@@ -25,35 +25,31 @@ const FavoritesContext = createContext<FavoritesContextType | undefined>(
   undefined,
 );
 
-export const FavoritesProvider = ({
-  children,
-}: {
-  children: React.ReactNode;
-}) => {
+export const FavoritesProvider = ({ children }: { children: React.ReactNode }) => {
   const { user } = useAuth();
   const [favorites, setFavorites] = useState<number[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const loadFavorites = useCallback(async () => {
-    if (!user) {
-      setFavorites([]);
-      setLoading(false);
-      return;
-    }
-
-    try {
-      const favs = await getUserFavorites(user.uid);
-      setFavorites(favs);
-    } catch (error) {
-      console.error("Error loading favorites:", error);
-    } finally {
-      setLoading(false);
-    }
-  }, [user]);
-
   useEffect(() => {
+    const loadFavorites = async () => {
+      if (!user) {
+        setFavorites([]);
+        setLoading(false);
+        return;
+      }
+
+      try {
+        const favs = await getUserFavorites(user.uid);
+        setFavorites(favs);
+      } catch (error) {
+        console.error("Error loading favorites:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
     loadFavorites();
-  }, [loadFavorites]);
+  }, [user]);
 
   useEffect(() => {
     if (!user) return;
@@ -64,6 +60,7 @@ export const FavoritesProvider = ({
 
     return () => unsubscribe();
   }, [user]);
+
 
   const toggleFavorite = useCallback(
     async (movieId: number) => {
