@@ -19,6 +19,8 @@ export const Header = () => {
   const { collections, loading: collectionsLoading } = useCollections();
   const { favorites, loading: favLoading } = useFavorites();
 
+  const isAuthenticated = !!user;
+
   const libraryCount = library.filter((m) => m.status !== null).length;
   const collectionsCount = collections.length;
   const favoritesCount = favorites.length;
@@ -46,17 +48,15 @@ export const Header = () => {
           >
             {link.text}
 
-            {link.to === "/library" && !libraryLoading && libraryCount > 0 && (
+            {isAuthenticated && link.to === "/library" && !libraryLoading && libraryCount > 0 && (
               <span className={styles.badge}> ({libraryCount})</span>
             )}
 
-            {link.to === "/collections" &&
-              !collectionsLoading &&
-              collectionsCount > 0 && (
-                <span className={styles.badge}> ({collectionsCount})</span>
-              )}
+            {isAuthenticated && link.to === "/collections" && !collectionsLoading && collectionsCount > 0 && (
+              <span className={styles.badge}> ({collectionsCount})</span>
+            )}
 
-            {link.to === "/favorites" && !favLoading && favoritesCount > 0 && (
+            {isAuthenticated && link.to === "/favorites" && !favLoading && favoritesCount > 0 && (
               <span className={styles.badge}> ({favoritesCount})</span>
             )}
           </NavLink>

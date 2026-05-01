@@ -23,6 +23,7 @@ export interface Film {
   year: string;
   posterUrl?: string;
   rating?: number | string | null;
+  description?: string;
 }
 
 export interface PopularResponse {

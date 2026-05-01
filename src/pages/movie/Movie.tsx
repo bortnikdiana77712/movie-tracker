@@ -1,6 +1,8 @@
 import { useParams } from "react-router";
 import { useEffect, useState } from "react";
 import { useAuth } from "../../hooks/useAuth";
+import { useLibrary } from "../../context/LibraryContext";
+import { useFavorites } from "../../context/FavoritesContext";
 import type { FilmStatus } from "../../config/status.config";
 import { useCollections } from "../../context/CollectionContext";
 import {
@@ -23,6 +25,8 @@ export const MoviePage = () => {
   const { id } = useParams();
   const movieId = Number(id);
   const { user } = useAuth();
+  const { toggleFavorite, isFavorite } = useFavorites();
+  const { setStatus, getStatus } = useLibrary();
   const {
     collections,
     createCollection,
@@ -32,14 +36,17 @@ export const MoviePage = () => {
   } = useCollections();
 
   const [movie, setMovie] = useState<MovieDetails | null>(null);
-  const [isFavorite, setIsFavorite] = useState(false);
-  const [selectedStatus, setSelectedStatus] = useState<FilmStatus | null>(null);
-  const [showCreateModal, setShowCreateModal] = useState(false);
   const [similarFilms, setSimilarFilms] = useState<Film[]>([]);
   const [similarLoading, setSimilarLoading] = useState(false);
+  const [showCreateModal, setShowCreateModal] = useState(false);
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  const isAuthenticated = !!user;
+
+  const selectedStatus = getStatus(movieId);
+  const isFav = isFavorite(movieId);
 
   useEffect(() => {
     const fetchMovie = async () => {
@@ -82,7 +89,18 @@ export const MoviePage = () => {
     fetchSimilar();
   }, [id, movieId]);
 
+  const handleToggleFavorite = async () => {
+    if (!isAuthenticated) return;
+    await toggleFavorite(movieId);
+  };
+
+  const handleStatusChange = async (status: FilmStatus | null) => {
+    if (!isAuthenticated) return;
+    await setStatus(movieId, status);
+  };
+
   const toggleCollection = async (collectionId: string) => {
+    if (!isAuthenticated) return;
     if (isInCollection(collectionId, movieId)) {
       await removeFromCollection(collectionId, movieId);
     } else {
@@ -91,6 +109,7 @@ export const MoviePage = () => {
   };
 
   const handleCreateCollection = async (name: string) => {
+    if (!isAuthenticated) return;
     if (user && name.trim()) {
       await createCollection(name.trim());
     }
@@ -115,7 +134,7 @@ export const MoviePage = () => {
       <div className={styles.backButton}>
         <BackButton buttonText="Back" />
       </div>
-      
+
       <div className={styles.backdrop}>
         <img
           src={movie.posterUrl}
@@ -134,13 +153,15 @@ export const MoviePage = () => {
               className={styles.poster}
             />
 
-            <button
-              className={`${styles.favoriteBtn} ${isFavorite ? styles.active : ""}`}
-              onClick={() => setIsFavorite(!isFavorite)}
-            >
-              {isFavorite ? <FaHeart /> : <FaRegHeart />}
-              <span>{isFavorite ? "In Favorites" : "Add to Favorites"}</span>
-            </button>
+            {isAuthenticated && (
+              <button
+                className={`${styles.favoriteBtn} ${isFav ? styles.active : ""}`}
+                onClick={handleToggleFavorite}
+              >
+                {isFav ? <FaHeart /> : <FaRegHeart />}
+                <span>{isFav ? "In Favorites" : "Add to Favorites"}</span>
+              </button>
+            )}
           </div>
 
           <div className={styles.info}>
@@ -168,33 +189,39 @@ export const MoviePage = () => {
 
             <p className={styles.description}>{movie.description}</p>
 
-            <div className={styles.statusSection}>
-              <h3 className={styles.sectionTitle}>Status</h3>
+            {isAuthenticated && (
+              <div className={styles.statusSection}>
+                <h3 className={styles.sectionTitle}>Status</h3>
 
-              <StatusButtons
-                selectedStatus={selectedStatus}
-                onStatusChange={setSelectedStatus}
+                <StatusButtons
+                  selectedStatus={selectedStatus}
+                  onStatusChange={handleStatusChange}
+                />
+              </div>
+            )}
+
+            {isAuthenticated && (
+              <div className={styles.collectionsSection}>
+                <h3 className={styles.sectionTitle}>Collections</h3>
+
+                <CollectionList
+                  collections={collections}
+                  movieId={movieId}
+                  isInCollection={isInCollection}
+                  onToggleCollection={toggleCollection}
+                  onCreateNew={() => setShowCreateModal(true)}
+                />
+              </div>
+            )}
+
+            {isAuthenticated && (
+              <CreateCollectionModal
+                isOpen={showCreateModal}
+                onClose={() => setShowCreateModal(false)}
+                onCreate={handleCreateCollection}
+                existingCollections={collections.map((c) => c.name)}
               />
-            </div>
-
-            <div className={styles.collectionsSection}>
-              <h3 className={styles.sectionTitle}>Collections</h3>
-
-              <CollectionList
-                collections={collections}
-                movieId={movieId}
-                isInCollection={isInCollection}
-                onToggleCollection={toggleCollection}
-                onCreateNew={() => setShowCreateModal(true)}
-              />
-            </div>
-
-            <CreateCollectionModal
-              isOpen={showCreateModal}
-              onClose={() => setShowCreateModal(false)}
-              onCreate={handleCreateCollection}
-              existingCollections={collections.map((c) => c.name)}
-            />
+            )}
           </div>
         </div>
 

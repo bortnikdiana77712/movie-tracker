@@ -7,6 +7,9 @@ import {
   getDocs,
   getDoc,
   onSnapshot,
+  query,
+  orderBy,
+  Timestamp,
 } from "firebase/firestore";
 
 export const addToFavorites = async (
@@ -15,7 +18,7 @@ export const addToFavorites = async (
 ): Promise<void> => {
   try {
     const ref = doc(db, "users", userId, "favorites", String(movieId));
-    await setDoc(ref, { movieId, addedAt: new Date() });
+    await setDoc(ref, { movieId, addedAt: Timestamp.now() });
   } catch (error) {
     console.error(error);
   }
@@ -50,7 +53,8 @@ export const isFavorite = async (
 export const getUserFavorites = async (userId: string): Promise<number[]> => {
   try {
     const favoritesRef = collection(db, "users", userId, "favorites");
-    const snapshot = await getDocs(favoritesRef);
+    const q = query(favoritesRef, orderBy("addedAt", "desc"));
+    const snapshot = await getDocs(q);
     return snapshot.docs.map((doc) => parseInt(doc.id));
   } catch (error) {
     console.error(error);
@@ -63,8 +67,10 @@ export const subscribeToFavorites = (
   onUpdate: (favorites: number[]) => void,
 ) => {
   const favoritesRef = collection(db, "users", userId, "favorites");
+  const q = query(favoritesRef, orderBy("addedAt", "desc"));
+
   return onSnapshot(
-    favoritesRef,
+    q,
     (snapshot) => {
       const favorites = snapshot.docs.map((doc) => parseInt(doc.id));
       onUpdate(favorites);

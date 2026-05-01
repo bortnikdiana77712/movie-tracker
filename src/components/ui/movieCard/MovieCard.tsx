@@ -33,6 +33,9 @@ export const MovieCard = ({ film }: MovieCardProps) => {
   const { collections, createCollection, addToCollection, removeFromCollection } = useCollections();
   const { setStatus, getStatus } = useLibrary();
   const { toggleFavorite, isFavorite } = useFavorites();
+  
+  const isAuthenticated = !!user;
+  
   const isFav = isFavorite(film.id);
   
   const [status, setStatusState] = useState<FilmStatus | null>(() => getStatus(film.id));
@@ -40,6 +43,7 @@ export const MovieCard = ({ film }: MovieCardProps) => {
   const [showCreateModal, setShowCreateModal] = useState(false);
 
   const toggleCollection = async (collectionId: string) => {
+    if (!isAuthenticated) return;
     const isSelected = collections.some((col) => col.movies.includes(film.id));
     if (isSelected) {
       await removeFromCollection(collectionId, film.id);
@@ -51,15 +55,18 @@ export const MovieCard = ({ film }: MovieCardProps) => {
   const handleToggleFavorite = async (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
+    if (!isAuthenticated) return;
     await toggleFavorite(film.id);
   };
 
   const handleStatusChange = (newStatus: FilmStatus | null) => {
+    if (!isAuthenticated) return
     setStatusState(newStatus);
     setStatus(film.id, newStatus);
   };
 
   const handleCreateCollection = async (name: string) => {
+    if (!isAuthenticated) return;
     if (user && name.trim()) {
       await createCollection(name.trim());
     }
@@ -72,8 +79,8 @@ export const MovieCard = ({ film }: MovieCardProps) => {
   return (
     <>
       <div
-        className={`${styles.card} ${isHovered ? styles.cardHovered : ""}`}
-        onMouseEnter={() => setIsHovered(true)}
+        className={`${styles.card} ${isHovered && isAuthenticated ? styles.cardHovered : ""}`}
+        onMouseEnter={() => isAuthenticated && setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
         <Link to={`/movie/${film.id}`}>
@@ -88,48 +95,50 @@ export const MovieCard = ({ film }: MovieCardProps) => {
           </div>
         </Link>
 
-        <div className={`${styles.actions} ${isHovered ? styles.actionsVisible : ""}`}>
-          <button
-            className={`${styles.actionBtn} ${isFav ? styles.active : ""}`}
-            onClick={handleToggleFavorite}
-          >
-            {isFav ? <FaHeart /> : <FaRegHeart />}
-          </button>
-
-          <Dropdown trigger={<button className={styles.actionBtn}>{<FaRegBookmark />}</button>}>
-            <div className={styles.dropdownHeader}>Status</div>
-            
-            {STATUS_OPTIONS.map((option) => (
-              <button
-                key={option.value}
-                className={`${styles.dropdownItem} ${status === option.value ? styles.active : ""}`}
-                onClick={() => handleStatusChange(status === option.value ? null : option.value)}
-              >
-                {option.icon} {option.label}
-              </button>
-            ))}
-          </Dropdown>
-
-          <Dropdown trigger={<button className={styles.actionBtn}>{<FaFolder />}</button>}>
-            <div className={styles.dropdownHeader}>Collections</div>
-
-            {collections.map((col) => (
-              <button
-                key={col.id}
-                className={`${styles.dropdownItem} ${col.movies.includes(film.id) ? styles.active : ""}`}
-                onClick={() => toggleCollection(col.id)}
-              >
-                {col.movies.includes(film.id) && <FaCheck />} {col.name}
-              </button>
-            ))}
-
-            <div className={styles.divider} />
-
-            <button className={styles.dropdownItem} onClick={() => setShowCreateModal(true)}>
-              <FaPlus /> Create new
+        {isAuthenticated && (
+          <div className={`${styles.actions} ${isHovered ? styles.actionsVisible : ""}`}>
+            <button
+              className={`${styles.actionBtn} ${isFav ? styles.active : ""}`}
+              onClick={handleToggleFavorite}
+            >
+              {isFav ? <FaHeart /> : <FaRegHeart />}
             </button>
-          </Dropdown>
-        </div>
+
+            <Dropdown trigger={<button className={styles.actionBtn}>{<FaRegBookmark />}</button>}>
+              <div className={styles.dropdownHeader}>Status</div>
+              
+              {STATUS_OPTIONS.map((option) => (
+                <button
+                  key={option.value}
+                  className={`${styles.dropdownItem} ${status === option.value ? styles.active : ""}`}
+                  onClick={() => handleStatusChange(status === option.value ? null : option.value)}
+                >
+                  {option.icon} {option.label}
+                </button>
+              ))}
+            </Dropdown>
+
+            <Dropdown trigger={<button className={styles.actionBtn}>{<FaFolder />}</button>}>
+              <div className={styles.dropdownHeader}>Collections</div>
+
+              {collections.map((col) => (
+                <button
+                  key={col.id}
+                  className={`${styles.dropdownItem} ${col.movies.includes(film.id) ? styles.active : ""}`}
+                  onClick={() => toggleCollection(col.id)}
+                >
+                  {col.movies.includes(film.id) && <FaCheck />} {col.name}
+                </button>
+              ))}
+
+              <div className={styles.divider} />
+
+              <button className={styles.dropdownItem} onClick={() => setShowCreateModal(true)}>
+                <FaPlus /> Create new
+              </button>
+            </Dropdown>
+          </div>
+        )}
 
         <Link to={`/movie/${film.id}`}>
           <div className={styles.info}>
@@ -144,12 +153,14 @@ export const MovieCard = ({ film }: MovieCardProps) => {
         </Link>
       </div>
 
-      <CreateCollectionModal
-        isOpen={showCreateModal}
-        onClose={() => setShowCreateModal(false)}
-        onCreate={handleCreateCollection}
-        existingCollections={collections.map((c) => c.name)}
-      />
+      {isAuthenticated && (
+        <CreateCollectionModal
+          isOpen={showCreateModal}
+          onClose={() => setShowCreateModal(false)}
+          onCreate={handleCreateCollection}
+          existingCollections={collections.map((c) => c.name)}
+        />
+      )}
     </>
   );
 };
