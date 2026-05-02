@@ -45,10 +45,11 @@
   border-radius: 20px;
 }
 
-.moviesSlider {
+.moviesGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  grid-template-columns: repeat(5, 1fr);
   gap: 20px;
+  width: 100%;
 }
 
 .noMovies {
@@ -89,11 +90,12 @@
 }
 
 .addBtn {
-  min-width: 145px;
+  min-width: 160px;
   display: flex;
   align-items: center;
   gap: 8px;
   background: var(--accent);
+  padding: 10px 20px;
 }
 
 .addMoviesLink {
@@ -152,3 +154,58 @@
   transform: scale(1.1);
 }
 
+@media (max-width: 620px) {
+  .header {
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .h1 {
+    text-align: center;
+  }
+}
+
+@media (max-width: 600px) {
+  .collections {
+    padding: 40px 40px;
+  }
+}
+
+@media (max-width: 426px) {
+  .collections {
+    padding: 40px 20px;
+  }
+}
+
+@media (max-width: 1200px) {
+  .moviesGrid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+@media (max-width: 992px) {
+  .moviesGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 769px) {
+  .moviesGrid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+}
+
+@media (max-width: 600px) {
+  .moviesGrid {
+    gap: 14px;
+  }
+}
+
+@media (max-width: 426px) {
+  .moviesGrid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+}

@@ -34,6 +34,8 @@
   border-radius: var(--radius-sm);
   border: none;
   font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.2s;
 }
 
 .searchButton:hover {
@@ -45,6 +47,8 @@
   border: 1px solid var(--border-light);
   border-radius: var(--radius-sm);
   font-size: 16px;
+  cursor: pointer;
+  transition: all 0.2s;
 }
 
 .clearButton:hover {
@@ -76,14 +80,81 @@
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 769px) {
+  .catalog {
+    gap: 30px;
+  }
+
+  .catalog h1 {
+    font-size: 24px;
+  }
+
+  .searchForm {
+    flex-wrap: wrap;
+  }
+
+  .searchInput {
+    min-width: 200px;
+  }
+
   .grid {
     grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+
+  .noResults {
+    font-size: 16px;
   }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 600px) {
+  .catalog {
+    padding: 40px 40px;
+  }
+}
+
+@media (max-width: 426px) {
+  .catalog {
+    gap: 24px;
+  }
+
+  .catalog h1 {
+    font-size: 20px;
+    text-align: center;
+  }
+
+  .searchForm {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .searchInput {
+    width: 100%;
+    padding: 10px 12px;
+    font-size: 14px;
+  }
+
+  .searchButton,
+  .clearButton {
+    width: 100%;
+    padding: 10px 12px;
+    font-size: 14px;
+  }
+
   .grid {
     grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .noResults {
+    font-size: 14px;
+    text-align: center;
+  }
+}
+
+@media (min-width: 427px) and (max-width: 769px) {
+  .searchButton,
+  .clearButton {
+    padding: 8px 16px;
   }
 }

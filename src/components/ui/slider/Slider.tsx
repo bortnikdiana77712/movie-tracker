@@ -82,6 +82,7 @@ export const Slider = ({ title, films, loading }: SliderProps) => {
             setIsEnd(swiper.isEnd);
           }}
           breakpoints={{
+            420: { slidesPerView: 1 },
             640: { slidesPerView: 2 },
             768: { slidesPerView: 3 },
             1024: { slidesPerView: 4 },
