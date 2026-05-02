@@ -98,3 +98,10 @@
   font-size: 12px;
   color: var(--error);
 }
+
+@media (max-width: 426px) {
+  .formWrapper {
+    min-width: 360px;
+    padding: var(--spacing-lg);
+  }
+}
