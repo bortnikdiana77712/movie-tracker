@@ -1,0 +1,12 @@
+footer {
+  display: flex;
+  justify-content: space-between;
+  padding: 20px 100px;
+  background-color: var(--bg-primary);
+}
+
+@media (max-width: 1060px) {
+  footer {
+    padding: 20px 40px;
+  }
+}

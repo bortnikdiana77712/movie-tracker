@@ -1,0 +1,160 @@
+.catalog {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 40px;
+  padding: 40px 100px;
+}
+
+.searchForm {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.searchInput {
+  flex: 1;
+  padding: var(--input-padding);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background-color: var(--bg-third);
+  color: var(--text-primary);
+  font-size: 16px;
+}
+
+.searchInput:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.searchButton {
+  padding: var(--input-padding);
+  background-color: var(--accent);
+  border-radius: var(--radius-sm);
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.searchButton:hover {
+  background-color: var(--accent-dark);
+}
+
+.clearButton {
+  padding: var(--input-padding);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-sm);
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.clearButton:hover {
+  background-color: var(--bg-hover);
+  border-color: var(--accent);
+}
+
+.noResults {
+  font-size: 18px;
+  color: var(--text-secondary);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: var(--spacing-lg);
+  width: 100%;
+}
+
+@media (max-width: 1200px) {
+  .grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+@media (max-width: 992px) {
+  .grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 769px) {
+  .catalog {
+    gap: 30px;
+  }
+
+  .catalog h1 {
+    font-size: 24px;
+  }
+
+  .searchForm {
+    flex-wrap: wrap;
+  }
+
+  .searchInput {
+    min-width: 200px;
+  }
+
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+
+  .noResults {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 600px) {
+  .catalog {
+    padding: 40px 40px;
+  }
+}
+
+@media (max-width: 426px) {
+  .catalog {
+    gap: 24px;
+  }
+
+  .catalog h1 {
+    font-size: 20px;
+    text-align: center;
+  }
+
+  .searchForm {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .searchInput {
+    width: 100%;
+    padding: 10px 12px;
+    font-size: 14px;
+  }
+
+  .searchButton,
+  .clearButton {
+    width: 100%;
+    padding: 10px 12px;
+    font-size: 14px;
+  }
+
+  .grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .noResults {
+    font-size: 14px;
+    text-align: center;
+  }
+}
+
+@media (min-width: 427px) and (max-width: 769px) {
+  .searchButton,
+  .clearButton {
+    padding: 8px 16px;
+  }
+}

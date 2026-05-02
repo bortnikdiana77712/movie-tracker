@@ -1,0 +1,47 @@
+.statusButtons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.statusButton {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  background: var(--bg-third);
+  border: 1px solid var(--border);
+  border-radius: 30px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.statusButton:hover {
+  transform: translateY(-2px);
+  background: var(--bg-hover);
+  border-color: var(--text-secondary);
+}
+
+.statusButton.active[data-status="watched"] {
+  background: rgba(76, 175, 80, 0.2);
+  border-color: #4caf50;
+  color: #4caf50;
+}
+
+.statusButton.active[data-status="watching"] {
+  background: rgba(255, 152, 0, 0.2);
+  border-color: #ff9800;
+  color: #ff9800;
+}
+
+.statusButton.active[data-status="want_to_watch"] {
+  background: rgba(33, 150, 243, 0.2);
+  border-color: #2196f3;
+  color: #2196f3;
+}
+
+.statusButton.active[data-status="abandoned"] {
+  background: rgba(244, 67, 54, 0.2);
+  border-color: #f44336;
+  color: #f44336;
+}

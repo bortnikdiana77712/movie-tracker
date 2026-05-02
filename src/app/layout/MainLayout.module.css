@@ -1,0 +1,10 @@
+main {
+  min-height: 600px;
+  background-color: var(--bg-secondary);
+}
+
+/* @media (max-width: 1060px) {
+  main {
+    padding: 40px 40px;
+  }
+} */
