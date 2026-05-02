@@ -100,10 +100,10 @@
 .info {
   flex: 1;
   border-radius: var(--radius-md);
-  padding: var(--spacing-lg);
   display: flex;
   flex-direction: column;
   gap: var(--spacing-lg);
+  min-height: 120px;
 }
 
 .title {
@@ -146,7 +146,8 @@
   line-height: 1.6;
 }
 
-.statusSection, .collectionsSection {
+.statusSection,
+.collectionsSection {
   display: flex;
   flex-direction: column;
   gap: var(--spacing-sm);
@@ -156,6 +157,7 @@
   display: flex;
   flex-direction: row;
   gap: 12px;
+  flex-wrap: wrap;
 }
 
 .statusButton {
@@ -197,4 +199,158 @@
   background: rgba(244, 67, 54, 0.2);
   border-color: #f44336;
   color: #f44336;
+}
+
+@media (max-width: 769px) {
+  .backdropImage {
+    min-height: 1700px;
+  }
+
+  .slider {
+    margin: 0;
+  }
+
+  .filmContent {
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+  }
+
+  .posterWrapper {
+    width: 250px;
+  }
+
+  .favoriteBtn {
+    bottom: 30px;
+    left: 12px;
+    right: 12px;
+    padding: 8px 10px;
+    font-size: 12px;
+  }
+
+  .info {
+    gap: 16px;
+    min-height: 130px;
+  }
+
+  .title {
+    font-size: 28px;
+    text-align: center;
+  }
+
+  .metadata {
+    justify-content: center;
+    gap: 16px;
+  }
+
+  .tags {
+    justify-content: center;
+  }
+
+  .description {
+    font-size: 14px;
+    text-align: center;
+  }
+
+  .statusSection,
+  .collectionsSection {
+    align-items: center;
+  }
+
+  .statusButtons {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+  }
+}
+
+@media (max-height: 600px) {
+  .backButton {
+    position: absolute;
+    left: 40px;
+    z-index: 3;
+  }
+
+  .content {
+    top: 120px;
+    left: 40px;
+    right: 40px;
+    gap: 20px;
+  }
+}
+
+@media (max-width: 426px) {
+  .backdropImage {
+    min-height: 1650px;
+  }
+
+  .backButton {
+    top: 16px;
+    left: 40px;
+  }
+
+  .content {
+    top: 120px;
+    left: 40px;
+    right: 40px;
+    gap: 20px;
+  }
+
+  .posterWrapper {
+    width: 200px;
+  }
+
+  .favoriteBtn {
+    bottom: 20px;
+    left: 8px;
+    right: 8px;
+    padding: 6px 8px;
+    font-size: 11px;
+  }
+
+  .favoriteBtn svg {
+    font-size: 12px;
+  }
+
+  .info {
+    padding: 16px;
+    gap: 12px;
+  }
+
+  .title {
+    font-size: 24px;
+  }
+
+  .metadata {
+    gap: 12px;
+  }
+
+  .metaItem {
+    font-size: 12px;
+  }
+
+  .tag {
+    font-size: 10px;
+    padding: 3px 10px;
+  }
+
+  .description {
+    font-size: 13px;
+    line-height: 1.5;
+  }
+
+  .statusSection h3,
+  .collectionsSection h3 {
+    font-size: 16px;
+  }
+
+  .statusButton {
+    justify-content: center;
+    font-size: 10px;
+    padding: 3px 10px;
+  }
+
+  .statusButtons {
+    gap: 8px;
+  }
 }

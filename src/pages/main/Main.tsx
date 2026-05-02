@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { useFilms } from "../../hooks";
 import { useFavorites } from "../../context/FavoritesContext";
 import { useCollections } from "../../context/CollectionContext";
+import { useAuth } from "../../hooks/useAuth";
 import { Loading, MovieCard } from "../../components";
 import type { Film } from "../../types";
 import { getFilmDetails } from "../../services/kinopoiskApi";
@@ -13,6 +14,7 @@ import styles from "./Main.module.css";
 const filmCache = new Map<number, Film>();
 
 export const Main = () => {
+  const { user } = useAuth();
   const { films, loading: filmsLoading } = useFilms({
     type: "popular",
     page: 1,
@@ -29,6 +31,7 @@ export const Main = () => {
   const [loadingFavorites, setLoadingFavorites] = useState(false);
 
   const lastLoadedIdsRef = useRef<string>("");
+  const isAuthenticated = !!user;
 
   const isFeaturedFavorite = featuredFilm ? isFavorite(featuredFilm.id) : false;
 
@@ -40,7 +43,9 @@ export const Main = () => {
 
   useEffect(() => {
     const handleResize = () => {
-      if (window.innerWidth < 768) {
+      if (window.innerWidth < 480) {
+        setSlidesPerView(1);
+      } else if (window.innerWidth < 770) {
         setSlidesPerView(2);
       } else if (window.innerWidth < 1024) {
         setSlidesPerView(4);
@@ -139,7 +144,7 @@ export const Main = () => {
   if (filmsLoading) return <Loading />;
 
   return (
-    <div className={styles.home}>
+    <div className={styles.main}>
       {featuredFilm && (
         <div className={styles.hero}>
           <div
@@ -176,13 +181,15 @@ export const Main = () => {
                 Learn more
               </Link>
 
-              <button
-                onClick={handleToggleFavorite}
-                className={`${styles.favoriteBtn} ${isFeaturedFavorite ? styles.active : ""}`}
-              >
-                <FaHeart />{" "}
-                {isFeaturedFavorite ? "In favorites" : "Add to favorites"}
-              </button>
+              {isAuthenticated && (
+                <button
+                  onClick={handleToggleFavorite}
+                  className={`${styles.favoriteBtn} ${isFeaturedFavorite ? styles.active : ""}`}
+                >
+                  <FaHeart />{" "}
+                  {isFeaturedFavorite ? "In favorites" : "Add to favorites"}
+                </button>
+              )}
             </div>
           </div>
         </div>
@@ -223,45 +230,46 @@ export const Main = () => {
           </div>
         </div>
 
-        {loadingFavorites ? (
-          <div className={styles.section}>
-            <div className={styles.sectionHeader}>
-              <h2>Recent favorites</h2>
-            </div>
-
-            <div className={styles.favoritesLoader}>Loading favorites...</div>
-          </div>
-        ) : recentFavorites.length > 0 ? (
-          <div className={styles.section}>
-            <div className={styles.sectionHeader}>
-              <h2>Recent favorites</h2>
-
-              <Link to="/favorites" className={styles.viewAll}>
-                View all
-              </Link>
-            </div>
-
-            <div className={styles.moviesGrid}>
-              {recentFavorites.map((film) => (
-                <MovieCard key={film.id} film={film} />
-              ))}
-            </div>
-          </div>
-        ) : (
-          <div className={styles.section}>
-            <div className={styles.sectionHeader}>
-              <h2>Recent favorites</h2>
-            </div>
-
-            <div className={styles.emptyFavorites}>
-              <p>No favorite movies yet</p>
-
-              <p>Add movies by clicking on the heart icon</p>
-            </div>
-          </div>
+        {isAuthenticated && (
+          <>
+            {loadingFavorites ? (
+              <div className={styles.section}>
+                <div className={styles.sectionHeader}>
+                  <h2>Recent favorites</h2>
+                </div>
+                <div className={styles.favoritesLoader}>
+                  Loading favorites...
+                </div>
+              </div>
+            ) : recentFavorites.length > 0 ? (
+              <div className={styles.section}>
+                <div className={styles.sectionHeader}>
+                  <h2>Recent favorites</h2>
+                  <Link to="/favorites" className={styles.viewAll}>
+                    View all
+                  </Link>
+                </div>
+                <div className={styles.moviesGrid}>
+                  {recentFavorites.map((film) => (
+                    <MovieCard key={film.id} film={film} />
+                  ))}
+                </div>
+              </div>
+            ) : (
+              <div className={styles.section}>
+                <div className={styles.sectionHeader}>
+                  <h2>Recent favorites</h2>
+                </div>
+                <div className={styles.emptyFavorites}>
+                  <p>No favorite movies yet</p>
+                  <p>Add movies by clicking on the heart icon</p>
+                </div>
+              </div>
+            )}
+          </>
         )}
 
-        {collections.length > 0 && (
+        {isAuthenticated && collections.length > 0 && (
           <div className={styles.section}>
             <div className={styles.sectionHeader}>
               <h2>My collections</h2>

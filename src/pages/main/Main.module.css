@@ -1,14 +1,12 @@
-.home {
+.main {
   min-height: 100vh;
-  background: var(--bg-primary);
+  background-color: var(--bg-secondary);
 }
 
 .hero {
   position: relative;
   height: 500px;
   overflow: hidden;
-/*   
-    margin-top: 80px; */
 }
 
 .heroBackground {
@@ -263,4 +261,142 @@
   font-size: 12px;
   color: var(--text-secondary);
   margin: 0;
+}
+
+@media (max-width: 770px) {
+  .hero {
+    height: 400px;
+  }
+
+  .heroContent {
+    padding: 40px;
+    max-width: 600px;
+  }
+
+  .heroTitle {
+    font-size: 28px;
+  }
+
+  .heroMeta {
+    font-size: 14px;
+    gap: 16px;
+  }
+
+  .heroDescription {
+    font-size: 14px;
+    max-height: 80px;
+    overflow: hidden;
+  }
+
+  .content {
+    gap: 30px;
+  }
+
+  .moviesSlider {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+
+  .moviesGrid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+
+  .collectionsGrid {
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 16px;
+  }
+
+  .prevBtn,
+  .nextBtn {
+    width: 40px;
+    height: 40px;
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 426px) {
+  .hero {
+    height: 350px;
+  }
+
+  .heroContent {
+    padding: 30px;
+    max-width: 100%;
+    gap: 12px;
+  }
+
+  .heroTitle {
+    font-size: 22px;
+  }
+
+  .heroMeta {
+    font-size: 12px;
+    gap: 12px;
+  }
+
+  .heroDescription {
+    font-size: 12px;
+    max-height: 60px;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+  }
+
+  .heroButtons {
+    gap: 12px;
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .watchBtn,
+  .favoriteBtn {
+    width: 100%;
+    text-align: center;
+  }
+
+  .content {
+    gap: 24px;
+    padding: 40px 60px;
+  }
+
+  .sectionHeader h2 {
+    font-size: 18px;
+  }
+
+  .viewAll {
+    font-size: 12px;
+  }
+
+  .moviesSlider {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .moviesGrid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .collectionsGrid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .collectionCard {
+    padding: 12px;
+  }
+
+  .collectionCard h3 {
+    font-size: 14px;
+  }
+
+  .favoritesLoader,
+  .emptyFavorites {
+    font-size: 14px;
+    padding: 30px 20px;
+  }
 }

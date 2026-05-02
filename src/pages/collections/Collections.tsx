@@ -1,9 +1,9 @@
 import { useCollections } from "../../context/CollectionContext";
 import {
-  Slider,
   CreateCollectionModal,
   Modal,
   Loading,
+  MovieCard,
 } from "../../components";
 import { useCollectionMovies } from "../../hooks/useCollectionMovies";
 import { useState } from "react";
@@ -56,7 +56,7 @@ export const Collections = () => {
           </button>
 
           <Link to="/catalog" className={styles.catalogLink}>
-            Catalog
+            Browse Catalog
           </Link>
         </div>
 
@@ -73,11 +73,11 @@ export const Collections = () => {
   return (
     <div className={styles.collections}>
       <div className={styles.header}>
-        <h1>My Collections</h1>
+        <h1 className={styles.h1}>My Collections</h1>
 
         <button
           onClick={() => setShowCreateModal(true)}
-          className={styles.addBtn}
+          className={styles.createBtn}
         >
           <FaPlus /> New collection
         </button>
@@ -112,11 +112,15 @@ export const Collections = () => {
                   <p>No movies in this collection yet</p>
 
                   <Link to="/catalog" className={styles.addMoviesLink}>
-                    Catalog
+                    Browse Catalog
                   </Link>
                 </div>
               ) : (
-                <Slider title="" films={movies} />
+                <div className={styles.moviesGrid}>
+                  {movies.map((film) => (
+                    <MovieCard key={film.id} film={film} />
+                  ))}
+                </div>
               )}
             </div>
           );
@@ -137,9 +141,14 @@ export const Collections = () => {
       >
         <div className={styles.modalBody}>
           <p>Are you sure you want to delete this collection?</p>
-          
+
           <div className={styles.modalButtons}>
-            <button onClick={() => setCollectionToDelete(null)}>Cancel</button>
+            <button
+              onClick={() => setCollectionToDelete(null)}
+              className={styles.cancelBtn}
+            >
+              Cancel
+            </button>
 
             <button
               onClick={handleDeleteCollection}
