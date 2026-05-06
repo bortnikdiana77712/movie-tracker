@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useFilms } from "../../hooks";
-import { Error, Loading, MovieCard, Pagination } from "../../components";
+import { Error, Skeleton, MovieCard, Pagination } from "../../components";
 
 import styles from "./Catalog.module.css";
 
@@ -97,13 +97,15 @@ export const Catalog = () => {
         <div className={styles.noResults}>No movies available</div>
       )}
 
-      {loading && <Loading />}
-
-      <div className={styles.grid}>
-        {films.map((film) => (
-          <MovieCard key={film.id} film={film} />
-        ))}
-      </div>
+      {loading ? (
+        <Skeleton variant="card" count={10} />
+      ) : (
+        <div className={styles.grid}>
+          {films.map((film) => (
+            <MovieCard key={film.id} film={film} />
+          ))}
+        </div>
+      )}
 
       {totalPages > 1 && (
         <Pagination
