@@ -4,7 +4,7 @@ import { useFilms } from "../../hooks";
 import { useFavorites } from "../../context/FavoritesContext";
 import { useCollections } from "../../context/CollectionContext";
 import { useAuth } from "../../hooks/useAuth";
-import { Loading, MovieCard } from "../../components";
+import { MovieCard, Skeleton } from "../../components";
 import type { Film } from "../../types";
 import { getFilmDetails } from "../../services/kinopoiskApi";
 import { FaHeart, FaStar, FaChevronLeft, FaChevronRight } from "react-icons/fa";
@@ -141,7 +141,7 @@ export const Main = () => {
 
   const visibleFilms = films.slice(currentSlide, currentSlide + slidesPerView);
 
-  if (filmsLoading) return <Loading />;
+  if (filmsLoading) return <Skeleton variant="hero" />;
 
   return (
     <div className={styles.main}>

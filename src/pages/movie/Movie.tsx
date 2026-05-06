@@ -9,7 +9,7 @@ import {
   BackButton,
   CreateCollectionModal,
   Error,
-  Loading,
+  Skeleton,
   StatusButtons,
   CollectionList,
   MovieMetadata,
@@ -118,7 +118,29 @@ export const MoviePage = () => {
 
   const rating = movie?.ratingKinopoisk?.toFixed(1);
 
-  if (loading) return <Loading />;
+  if (loading) {
+    return (
+      <div className={styles.moviePage}>
+        <div className={styles.backButton}>
+          <BackButton buttonText="Back" />
+        </div>
+
+        <Skeleton variant="hero" />
+
+        <div className={styles.content}>
+          <div className={styles.filmContent}>
+            <div className={styles.posterWrapper}>
+              <Skeleton variant="moviePoster" />
+            </div>
+
+            <div className={styles.info}>
+              <Skeleton variant="text" count={8} />
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   if (error || !movie) {
     return (
@@ -225,12 +247,16 @@ export const MoviePage = () => {
           </div>
         </div>
 
-        {similarFilms.length > 0 && (
-          <Slider
-            title="Similar Movies"
-            films={similarFilms}
-            loading={similarLoading}
-          />
+        {similarLoading ? (
+          <Skeleton variant="card" count={5} />
+        ) : (
+          similarFilms.length > 0 && (
+            <Slider
+              title="Similar Movies"
+              films={similarFilms}
+              loading={similarLoading}
+            />
+          )
         )}
       </div>
     </div>

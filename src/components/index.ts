@@ -13,5 +13,6 @@ export { CollectionList } from "./ui/collectionList/CollectionList";
 export { MovieMetadata } from "./ui/movieMetadata/MovieMetadata";
 export { StatusButtons } from "./ui/statusButtons/StatusButtons";
 export { Slider } from "./ui/slider/Slider";
+export { Skeleton } from "./ui/skeleton/Skeleton";
 export { Loading } from "./loading/Loading";
 export { Error } from "./error/Error";
